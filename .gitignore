@@ -1,0 +1,12 @@
+# .secrets/
+.vscode
+*.db
+*.csv
+*.xls
+*.log
+*.zip
+*.pickle
+*.xlsx
+__pycache__
+db_data/data
+automatizar_informe.ipynb

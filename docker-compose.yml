@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  pv-simulator:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: pv_simulator_img
+    container_name: pv_simulator
+    # restart: unless-stopped
+    volumes:
+      - ./.secrets:/opt/pv_simulator/.secrets
+      - ./output:/opt/pv_simulator/output
+    command: python3 /opt/pv_simulator/main.py
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - network
+
+  db:
+    image: postgres:15
+    container_name: postgres_db_pv_simulator
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db_data/data:/var/lib/postgresql/data
+      - ./.secrets:/run/secrets
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/pg-passwd
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "pv_sim"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    networks:
+      - network
+networks:
+  network:

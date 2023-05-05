@@ -1,1 +1,0 @@
-# photovoltaic_simulation
