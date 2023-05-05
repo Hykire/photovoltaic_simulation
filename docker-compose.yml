@@ -26,6 +26,7 @@ services:
     volumes:
       - ./db_data/data:/var/lib/postgresql/data
       - ./.secrets:/run/secrets
+      - ./db_backup/pv_sim_backup.sql:/docker-entrypoint-initdb.d/pv_sim_backup.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/pg-passwd
